@@ -1,6 +1,6 @@
 overwrite: true
 schema: 'https://graphql-pokemon2.vercel.app' # Replace with your GraphQL endpoint
-documents: 'queries/**/*.ts'
+documents: 'app/queries/**/*.ts'
 generates:
   ./types/generated/graphql.tsx:
     plugins:

@@ -1,42 +1,131 @@
-'use client'; // Client-side component
+"use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_POKEMONS } from "@/app/queries/pokemons"; // Adjust the import path
-import Searchbar from "@/app/components/searchbar";
-import Image from 'next/image';
+import { GET_POKEMON } from "@/app/queries/pokemons";
+import Search from "@/app/components/Search";
+import Image from "next/image";
+
+interface Attack {
+  name: string;
+  type: string;
+  damage: number;
+}
+
+type Attacks = {
+    fast: Attack[];
+    special: Attack[];
+  };
+
+interface Pokemon {
+  image: string;
+  name: string;
+  number: string;
+  weight: {
+    minimum: string;
+    maximum: string;
+  };
+  height: {
+    minimum: string;
+    maximum: string;
+  };
+  classification: string;
+  types: string[];
+  resistant: string[];
+  weaknesses: string[];
+  fleeRate: number;
+  maxCP: number;
+  maxHP: number;
+  attacks: {
+    fast: Attack[];
+    special: Attack[];
+  };
+}
 
 const Home: React.FC = () => {
-  const { data, loading, error } = useQuery(GET_POKEMONS, {
-    variables: { first: 10 }, // Fetch the first 10 Pokémon
+  const [searchTerm, setSearchTerm] = useState<string | null>(null);
+
+  const { data, loading, error } = useQuery(GET_POKEMON, {
+    variables: {
+      id: searchTerm && isNaN(Number(searchTerm)) ? null : searchTerm,
+      name: searchTerm && !isNaN(Number(searchTerm)) ? null : searchTerm,
+    },
+    skip: !searchTerm, // Skip the query if the searchTerm is empty
   });
+
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  // Extract the data
+  const pokemon = data?.pokemon;
+
   return (
     <section className="w-full flex-center flex-col">
-      <section className="w-full flex-center flex-col">
-        <h1 className="head_text text-center">
-          Search Pokemon
-          <br className="max-md:hidden" />
-        </h1>
-        <Searchbar />
-        <div className="pokemon-list">
-          {data?.pokemons.map((pokemon: any) => (
-            <div key={pokemon.id} className="pokemon-card">
-              <Image
-                src={pokemon.image}
-                alt={pokemon.name}
-                width={150} // Provide appropriate width
-                height={150} // Provide appropriate height
-                className="pokemon-image"
-              />
-              <h3>{pokemon.name}</h3>
+      <h1 className="head_text text-center">Search Pokémon</h1>
+    <Search onSearch={handleSearch} />
+      {/* Show the Pokémon's data if available */}
+      {pokemon ? (
+        <div className="pokemon-card">
+          <Image
+            src={pokemon.image}
+            alt={pokemon.name}
+            width={150}
+            height={150}
+            className="pokemon-image"
+          />
+          <h3>{pokemon.name}</h3>
+          <p><strong>Number:</strong> {pokemon.number}</p>
+          <p><strong>Weight:</strong> {pokemon.weight.minimum} - {pokemon.weight.maximum}</p>
+          <p><strong>Height:</strong> {pokemon.height.minimum} - {pokemon.height.maximum}</p>
+          <p><strong>Classification:</strong> {pokemon.classification}</p>
+          <p><strong>Types:</strong> {pokemon.types.join(', ')}</p>
+          <p><strong>Resistant:</strong> {pokemon.resistant.join(', ')}</p>
+          <p><strong>Weaknesses:</strong> {pokemon.weaknesses.join(', ')}</p>
+          <p><strong>Flee Rate:</strong> {pokemon.fleeRate}</p>
+          <p><strong>Max CP:</strong> {pokemon.maxCP}</p>
+          <p><strong>Max HP:</strong> {pokemon.maxHP}</p>
+
+          {/* Display attacks */}
+          {pokemon.attacks && (
+            <div>
+              <p><strong style={{ textDecoration: "underline" }}>Attacks</strong></p>
+              <div>
+                <p><strong>Fast Attacks:</strong></p>
+                {pokemon.attacks.fast.length > 0 ? (
+                  pokemon.attacks.fast.map((attack: Attack, index: number) => (
+                    <div key={index}>
+                        <strong>{attack.name}</strong>
+                        <p>Type: {attack.type} | Damage: {attack.damage}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No fast attacks available.</p>
+                )}
+              </div>
+
+              <div>
+                <p><strong>Special Attacks:</strong></p>
+                {pokemon.attacks.special.length > 0 ? (
+                  pokemon.attacks.special.map((attack: Attack, index: number) => (
+                    <div key={index}>
+                        <strong>{attack.name}</strong>
+                        <p>Type: {attack.type} | Damage: {attack.damage}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No special attacks available.</p>
+                )}
+              </div>
             </div>
-          ))}
+          )}
         </div>
-      </section>
+      ) : (
+        <p>No Pokémon found.</p>
+      )}
     </section>
   );
 };

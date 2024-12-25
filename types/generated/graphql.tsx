@@ -118,6 +118,14 @@ export type PokemonsQueryVariables = Exact<{
 
 export type PokemonsQuery = { __typename?: 'Query', pokemons?: Array<{ __typename?: 'Pokemon', id: string, number?: string | null, name?: string | null, classification?: string | null, types?: Array<string | null> | null, resistant?: Array<string | null> | null, weaknesses?: Array<string | null> | null, fleeRate?: number | null, maxCP?: number | null, maxHP?: number | null, image?: string | null, weight?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, height?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null } | null> | null };
 
+export type PokemonQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PokemonQuery = { __typename?: 'Query', pokemon?: { __typename?: 'Pokemon', id: string, name?: string | null, classification?: string | null, types?: Array<string | null> | null, resistant?: Array<string | null> | null, weaknesses?: Array<string | null> | null, fleeRate?: number | null, maxCP?: number | null, maxHP?: number | null, image?: string | null, weight?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, height?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, attacks?: { __typename?: 'PokemonAttack', fast?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null, special?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null } | null } | null };
+
 
 export const PokemonsDocument = gql`
     query pokemons($first: Int!) {
@@ -177,3 +185,73 @@ export type PokemonsQueryHookResult = ReturnType<typeof usePokemonsQuery>;
 export type PokemonsLazyQueryHookResult = ReturnType<typeof usePokemonsLazyQuery>;
 export type PokemonsSuspenseQueryHookResult = ReturnType<typeof usePokemonsSuspenseQuery>;
 export type PokemonsQueryResult = Apollo.QueryResult<PokemonsQuery, PokemonsQueryVariables>;
+export const PokemonDocument = gql`
+    query pokemon($id: String, $name: String) {
+  pokemon(id: $id, name: $name) {
+    id
+    name
+    weight {
+      minimum
+      maximum
+    }
+    height {
+      minimum
+      maximum
+    }
+    classification
+    types
+    resistant
+    weaknesses
+    fleeRate
+    maxCP
+    maxHP
+    image
+    attacks {
+      fast {
+        name
+        type
+        damage
+      }
+      special {
+        name
+        type
+        damage
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePokemonQuery__
+ *
+ * To run a query within a React component, call `usePokemonQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePokemonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePokemonQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function usePokemonQuery(baseOptions?: Apollo.QueryHookOptions<PokemonQuery, PokemonQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PokemonQuery, PokemonQueryVariables>(PokemonDocument, options);
+      }
+export function usePokemonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PokemonQuery, PokemonQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PokemonQuery, PokemonQueryVariables>(PokemonDocument, options);
+        }
+export function usePokemonSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PokemonQuery, PokemonQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PokemonQuery, PokemonQueryVariables>(PokemonDocument, options);
+        }
+export type PokemonQueryHookResult = ReturnType<typeof usePokemonQuery>;
+export type PokemonLazyQueryHookResult = ReturnType<typeof usePokemonLazyQuery>;
+export type PokemonSuspenseQueryHookResult = ReturnType<typeof usePokemonSuspenseQuery>;
+export type PokemonQueryResult = Apollo.QueryResult<PokemonQuery, PokemonQueryVariables>;

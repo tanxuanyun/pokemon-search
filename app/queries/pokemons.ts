@@ -25,3 +25,41 @@ export const GET_POKEMONS = gql`
     }
   }
 `;
+
+export const GET_POKEMON = gql`
+  query pokemon($id: String, $name: String) {
+    pokemon(id: $id, name: $name) {
+      id
+      name
+      weight {
+        minimum
+        maximum
+      }
+      height {
+        minimum
+        maximum
+      }
+      classification
+      types
+      resistant
+      weaknesses
+      fleeRate
+      maxCP
+      maxHP
+      image
+      attacks {
+        fast {
+          name
+          type
+          damage
+        }
+        special {
+          name
+          type
+          damage
+        }
+      }
+    }
+  }
+`;
+
