@@ -1,17 +1,17 @@
-export const metadata = {
-  title: "Pokemon Search",
-  description: "Search different pokemons",
-};
+'use client';
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html lang='en'>
+import { ReactNode } from 'react';
+import { ApolloProvider } from '@apollo/client';
+import client from '../lib/apollo-client'; // Adjust the path based on your project structure
+
+const RootLayout = ({ children }: { children: ReactNode }) => (
+  <html lang="en">
     <body>
-        <div className='main'>
-          <div className='gradient' />
-        </div>
-        <main className='app'>
+      <ApolloProvider client={client}>
+        <main className="app">
           {children}
         </main>
+      </ApolloProvider>
     </body>
   </html>
 );

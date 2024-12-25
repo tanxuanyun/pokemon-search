@@ -1,9 +1,16 @@
-const Home = () => (
-  <section className='w-full flex-center flex-col'>
-    <h1 className='head_text text-center'>
-      Pokemon Search
-    </h1>
-  </section>
-);
+import Home from "./home/index";
 
-export default Home;
+export const metadata = {
+  title: 'Pokemon Search',
+  description: 'Search different pokemons',
+};
+
+const Page = () => {
+  return (
+    <div>
+      <Home />
+    </div>
+  );
+};
+
+export default Page;
