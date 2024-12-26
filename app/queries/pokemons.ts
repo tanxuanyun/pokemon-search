@@ -27,6 +27,12 @@ export const GET_POKEMONS = gql`
 `;
 
 export const GET_POKEMON = gql`
+  fragment RecursivePokemonFragment on Pokemon {
+    id
+    name
+    image
+  }
+
   query pokemon($id: String, $name: String) {
     pokemon(id: $id, name: $name) {
       id
@@ -58,6 +64,9 @@ export const GET_POKEMON = gql`
           type
           damage
         }
+      }
+      evolutions {
+        ...RecursivePokemonFragment 
       }
     }
   }

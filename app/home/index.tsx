@@ -17,6 +17,13 @@ type Attacks = {
     special: Attack[];
   };
 
+
+interface PokemonEvolution {
+  id: string;
+  name: string;
+  image: string;
+}
+
 interface Pokemon {
   image: string;
   name: string;
@@ -40,6 +47,7 @@ interface Pokemon {
     fast: Attack[];
     special: Attack[];
   };
+  evolutions?: PokemonEvolution[];
 }
 
 const Home: React.FC = () => {
@@ -55,6 +63,10 @@ const Home: React.FC = () => {
 
   const handleSearch = (query: string) => {
     setSearchTerm(query);
+  };
+
+  const handleEvolutionClick = (name: string) => {
+    setSearchTerm(name); // Trigger search for the clicked evolution name
   };
 
   if (loading) return <p>Loading...</p>;
@@ -120,6 +132,26 @@ const Home: React.FC = () => {
                   <p>No special attacks available.</p>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Evolutions */}
+          {pokemon.evolutions && pokemon.evolutions.length > 0 && (
+            <div>
+              <p><strong>Evolutions:</strong></p>
+              {pokemon.evolutions.map((evolution: PokemonEvolution) => (
+                <div key={evolution.id}>
+                  <Image
+                    src={evolution.image}
+                    alt={evolution.name}
+                    width={100}
+                    height={100}
+                  />
+                  <h4 onClick={() => handleEvolutionClick(evolution.name)}
+                    style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
+                  >{evolution.name}</h4>
+                </div>
+              ))}
             </div>
           )}
         </div>
