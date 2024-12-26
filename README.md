@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Pokémon Search and Details App
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+This project is a web application built with **React**, **Apollo Client**, and **GraphQL** that allows users to search for Pokémon by their name or ID. Upon searching, the app retrieves detailed information about the selected Pokémon using the **Pokémon API** and displays key attributes such as name, type, weight, height, attacks, and evolutions.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Key Features:
+- **Pokémon Search**: Users can search for Pokémon by name or ID.
+- **Detailed Information**: Displays detailed information about the selected Pokémon, such as its classification, types, resistances, weaknesses, attacks, and evolutions.
+- **Evolution Navigation**: Users can click on a Pokémon's evolutions to view more details about them.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used:
+- **React**: Frontend framework to build the user interface.
+- **Apollo Client**: To fetch data from the GraphQL API.
+- **GraphQL**: API query language to retrieve Pokémon data.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup Instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Clone the repository**:
+    ```bash
+    git clone <repo-url>
+    cd <project-directory>
+    ```
 
-## Learn More
+2. **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Start the application**:
+    ```bash
+    npm start
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Test Cases
+Test Pokémon: Bulbasaur, Squirtle, and Charmander
+For the testing of the search functionality, three Pokémon were used as test cases:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Bulbasaur (ID: UG9rZW1vbjowMDE=)
+- Squirtle (ID: UG9rZW1vbjowMDc=)
+- Charmander (ID: UG9rZW1vbjowMDQ=)
