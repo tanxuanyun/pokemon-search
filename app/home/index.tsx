@@ -12,12 +12,6 @@ interface Attack {
   damage: number;
 }
 
-type Attacks = {
-    fast: Attack[];
-    special: Attack[];
-  };
-
-
 interface PokemonEvolution {
   id: string;
   name: string;
@@ -25,9 +19,9 @@ interface PokemonEvolution {
 }
 
 interface Pokemon {
-  image: string;
-  name: string;
+  id: string;
   number: string;
+  name: string;
   weight: {
     minimum: string;
     maximum: string;
@@ -43,6 +37,7 @@ interface Pokemon {
   fleeRate: number;
   maxCP: number;
   maxHP: number;
+  image: string;
   attacks: {
     fast: Attack[];
     special: Attack[];
@@ -53,13 +48,24 @@ interface Pokemon {
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
 
-  const { data, loading, error } = useQuery(GET_POKEMON, {
+  const { data, loading, error } = useQuery<{ pokemon: Pokemon }>(GET_POKEMON, {
     variables: {
-      id: searchTerm && isNaN(Number(searchTerm)) ? null : searchTerm,
-      name: searchTerm && !isNaN(Number(searchTerm)) ? null : searchTerm,
-    },
+      id: isBase64(searchTerm || '') ? searchTerm || '' : undefined, // Handle null and empty string
+      name: !isBase64(searchTerm || '') ? searchTerm || '' : undefined, // Handle null and empty string
+  },
     skip: !searchTerm, // Skip the query if the searchTerm is empty
   });
+
+  // Helper function to check if a string is base64 encoded
+  function isBase64(str: string): boolean {
+    if (!str) return false; // Handle case where str might be null or empty
+    try {
+      // Try decoding the string
+      return btoa(atob(str)) === str;
+    } catch (e) {
+      return false;
+    }
+  }
 
   const handleSearch = (query: string) => {
     setSearchTerm(query);
@@ -78,85 +84,92 @@ const Home: React.FC = () => {
   return (
     <section className="w-full flex-center flex-col">
       <h1 className="head_text text-center">Search Pokémon</h1>
-    <Search onSearch={handleSearch} />
-      {/* Show the Pokémon's data if available */}
-      {pokemon ? (
-        <div className="pokemon-card">
-          <Image
-            src={pokemon.image}
-            alt={pokemon.name}
-            width={150}
-            height={150}
-            className="pokemon-image"
-          />
-          <h3>{pokemon.name}</h3>
-          <p><strong>Number:</strong> {pokemon.number}</p>
-          <p><strong>Weight:</strong> {pokemon.weight.minimum} - {pokemon.weight.maximum}</p>
-          <p><strong>Height:</strong> {pokemon.height.minimum} - {pokemon.height.maximum}</p>
-          <p><strong>Classification:</strong> {pokemon.classification}</p>
-          <p><strong>Types:</strong> {pokemon.types.join(', ')}</p>
-          <p><strong>Resistant:</strong> {pokemon.resistant.join(', ')}</p>
-          <p><strong>Weaknesses:</strong> {pokemon.weaknesses.join(', ')}</p>
-          <p><strong>Flee Rate:</strong> {pokemon.fleeRate}</p>
-          <p><strong>Max CP:</strong> {pokemon.maxCP}</p>
-          <p><strong>Max HP:</strong> {pokemon.maxHP}</p>
+      <Search onSearch={handleSearch} />
 
-          {/* Display attacks */}
-          {pokemon.attacks && (
-            <div>
-              <p><strong style={{ textDecoration: "underline" }}>Attacks</strong></p>
+      {searchTerm ? (
+        pokemon ? (
+          <div className="pokemon-card">
+            <Image
+              src={pokemon.image}
+              alt={pokemon.name}
+              width={150}
+              height={150}
+              className="pokemon-image"
+            />
+            <h3>{pokemon.name}</h3>
+            <p><strong>Number:</strong> {pokemon.number}</p>
+            <p><strong>Weight:</strong> {pokemon.weight.minimum} - {pokemon.weight.maximum}</p>
+            <p><strong>Height:</strong> {pokemon.height.minimum} - {pokemon.height.maximum}</p>
+            <p><strong>Classification:</strong> {pokemon.classification}</p>
+            <p><strong>Types:</strong> {pokemon.types.join(', ')}</p>
+            <p><strong>Resistant:</strong> {pokemon.resistant.join(', ')}</p>
+            <p><strong>Weaknesses:</strong> {pokemon.weaknesses.join(', ')}</p>
+            <p><strong>Flee Rate:</strong> {pokemon.fleeRate}</p>
+            <p><strong>Max CP:</strong> {pokemon.maxCP}</p>
+            <p><strong>Max HP:</strong> {pokemon.maxHP}</p>
+
+            {/* Display attacks */}
+            {pokemon.attacks && (
               <div>
-                <p><strong>Fast Attacks:</strong></p>
-                {pokemon.attacks.fast.length > 0 ? (
-                  pokemon.attacks.fast.map((attack: Attack, index: number) => (
-                    <div key={index}>
+                <p><strong style={{ textDecoration: "underline" }}>Attacks</strong></p>
+                <div>
+                  <p><strong>Fast Attacks:</strong></p>
+                  {pokemon.attacks.fast.length > 0 ? (
+                    pokemon.attacks.fast.map((attack: Attack, index: number) => (
+                      <div key={index}>
                         <strong>{attack.name}</strong>
                         <p>Type: {attack.type} | Damage: {attack.damage}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No fast attacks available.</p>
-                )}
-              </div>
-
-              <div>
-                <p><strong>Special Attacks:</strong></p>
-                {pokemon.attacks.special.length > 0 ? (
-                  pokemon.attacks.special.map((attack: Attack, index: number) => (
-                    <div key={index}>
-                        <strong>{attack.name}</strong>
-                        <p>Type: {attack.type} | Damage: {attack.damage}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No special attacks available.</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Evolutions */}
-          {pokemon.evolutions && pokemon.evolutions.length > 0 && (
-            <div>
-              <p><strong>Evolutions:</strong></p>
-              {pokemon.evolutions.map((evolution: PokemonEvolution) => (
-                <div key={evolution.id}>
-                  <Image
-                    src={evolution.image}
-                    alt={evolution.name}
-                    width={100}
-                    height={100}
-                  />
-                  <h4 onClick={() => handleEvolutionClick(evolution.name)}
-                    style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
-                  >{evolution.name}</h4>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No fast attacks available.</p>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+
+                <div>
+                  <p><strong>Special Attacks:</strong></p>
+                  {pokemon.attacks.special.length > 0 ? (
+                    pokemon.attacks.special.map((attack: Attack, index: number) => (
+                      <div key={index}>
+                        <strong>{attack.name}</strong>
+                        <p>Type: {attack.type} | Damage: {attack.damage}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No special attacks available.</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Evolutions */}
+            {pokemon.evolutions && pokemon.evolutions.length > 0 && (
+              <div>
+                <p><strong>Evolutions:</strong></p>
+                {pokemon.evolutions.map((evolution: PokemonEvolution) => (
+                  <div key={evolution.id}>
+                    <Image
+                      src={evolution.image}
+                      alt={evolution.name}
+                      width={100}
+                      height={100}
+                    />
+                    <h4
+                      onClick={() => handleEvolutionClick(evolution.name)}
+                      style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
+                    >
+                      {evolution.name}
+                    </h4>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p>No Pokémon found for the search term: {searchTerm}</p>
+        )
       ) : (
-        <p>No Pokémon found.</p>
+        <p>Enter a Pokémon name or ID to search.</p>
       )}
     </section>
   );

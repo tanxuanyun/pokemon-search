@@ -36,6 +36,7 @@ export const GET_POKEMON = gql`
   query pokemon($id: String, $name: String) {
     pokemon(id: $id, name: $name) {
       id
+      number
       name
       weight {
         minimum

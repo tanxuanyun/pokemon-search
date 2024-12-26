@@ -126,7 +126,7 @@ export type PokemonQueryVariables = Exact<{
 }>;
 
 
-export type PokemonQuery = { __typename?: 'Query', pokemon?: { __typename?: 'Pokemon', id: string, name?: string | null, classification?: string | null, types?: Array<string | null> | null, resistant?: Array<string | null> | null, weaknesses?: Array<string | null> | null, fleeRate?: number | null, maxCP?: number | null, maxHP?: number | null, image?: string | null, weight?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, height?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, attacks?: { __typename?: 'PokemonAttack', fast?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null, special?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null } | null, evolutions?: Array<{ __typename?: 'Pokemon', id: string, name?: string | null, image?: string | null } | null> | null } | null };
+export type PokemonQuery = { __typename?: 'Query', pokemon?: { __typename?: 'Pokemon', id: string, number?: string | null, name?: string | null, classification?: string | null, types?: Array<string | null> | null, resistant?: Array<string | null> | null, weaknesses?: Array<string | null> | null, fleeRate?: number | null, maxCP?: number | null, maxHP?: number | null, image?: string | null, weight?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, height?: { __typename?: 'PokemonDimension', minimum?: string | null, maximum?: string | null } | null, attacks?: { __typename?: 'PokemonAttack', fast?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null, special?: Array<{ __typename?: 'Attack', name?: string | null, type?: string | null, damage?: number | null } | null> | null } | null, evolutions?: Array<{ __typename?: 'Pokemon', id: string, name?: string | null, image?: string | null } | null> | null } | null };
 
 export const RecursivePokemonFragmentFragmentDoc = gql`
     fragment RecursivePokemonFragment on Pokemon {
@@ -197,6 +197,7 @@ export const PokemonDocument = gql`
     query pokemon($id: String, $name: String) {
   pokemon(id: $id, name: $name) {
     id
+    number
     name
     weight {
       minimum
