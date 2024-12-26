@@ -10,6 +10,7 @@ const Search: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }) =
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       onSearch(input);  // Pass the search term to parent
+      setInput("");  // Clear the input field
     };
   
     return (
