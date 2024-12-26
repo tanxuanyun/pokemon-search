@@ -1,6 +1,6 @@
 # Pokémon Search and Details App
 
-![Bulbasaur Image](image\image.png)
+![Bulbasaur Image](image/image.png)
 
 ## Project Overview
 
