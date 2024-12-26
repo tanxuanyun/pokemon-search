@@ -1,5 +1,7 @@
 # Pokémon Search and Details App
 
+![Bulbasaur Image](image\image.png)
+
 ## Project Overview
 
 This project is a web application built with **React**, **Apollo Client**, and **GraphQL** that allows users to search for Pokémon by their name or ID. Upon searching, the app retrieves detailed information about the selected Pokémon using the **Pokémon API** and displays key attributes such as name, type, weight, height, attacks, and evolutions.
